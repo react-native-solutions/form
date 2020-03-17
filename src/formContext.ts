@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { FormStateActions } from './useFormState';
-import { FormMutableState } from './useFormState';
+import { FormStateActions } from './FormAction';
+import { FormMutableState } from './useForm';
 
 interface FormContext {
-  state?: FormMutableState;
+  form?: FormMutableState;
   actions?: FormStateActions;
 }
 

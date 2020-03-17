@@ -1,3 +1,5 @@
+export type AnyFunction = (...args: any[]) => any;
+
 export const identity = (a: any) => a;
 
 export const compose = (...functions: Function[]) => {
@@ -12,7 +14,7 @@ export const compose = (...functions: Function[]) => {
   return functions.reduce((a, b) => (...args: any[]) => a(b(...args)));
 };
 
-export const pipe = (...functions: Function[]) => {
+export const pipe = (...functions: AnyFunction[]) => {
   if (!functions.length) {
     return identity;
   }
@@ -23,11 +25,3 @@ export const pipe = (...functions: Function[]) => {
 
   return functions.reduce((a, b) => (...args: any[]) => b(a(...args)));
 };
-
-export const union = <F extends Function>(...funcs: F[]) => (
-  ...args: any[]
-): any => funcs.map(f => f(...args)).reduce((a, single) => a && single, true);
-
-export const disjunction = <F extends Function>(...funcs: F[]) => (
-  ...args: any[]
-): any => funcs.map(f => f(...args)).reduce((a, single) => a || single, false);

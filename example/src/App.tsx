@@ -8,11 +8,11 @@ import {
   NativeSyntheticEvent,
   TextInputChangeEventData,
 } from 'react-native';
-import { FieldState } from '../../src/Field';
+import { FieldState } from '../../src/createField';
 import { FormConfig } from '../../src/config';
-import { Form, Field, useFormState } from '../../src';
+import { FormProvider, useForm, Validators } from '../../src';
 import FormAction from '../../src/FormAction';
-import { FormStateActions } from '../../src/useFormState';
+import { FormStateActions } from '../../src/FormAction';
 
 const config: FormConfig = {
   validateOnChange: true,
@@ -20,13 +20,19 @@ const config: FormConfig = {
     login: {
       initialValue: '',
       validate: {
-        only: (value: any) => value === '123',
+        any: [
+          ['Login is bad :(', ({ value }) => value.includes('@')],
+          ['Login is bad :(', ({ value }) => value.includes('+380')],
+        ],
       },
     },
     password: {
       initialValue: '',
       validate: {
-        every: [],
+        every: [
+          ['Password is too short', Validators.minLength(4)],
+          ['Password is too long', Validators.maxLength(8)],
+        ],
       },
     },
     privacyPolicy: {
@@ -42,48 +48,54 @@ const extractNativeText = ({
 });
 
 function App() {
-  const signInForm = useFormState(config);
+  const SignInForm = useForm(config);
 
+  const { Fields } = SignInForm;
   return (
     <View style={styles.container}>
-      <Form state={signInForm} onSubmit={console.log}>
-        <Field
-          name="login"
-          render={({ value, handleChange, valid }) => (
+      <FormProvider form={SignInForm} onSubmit={console.log}>
+        <Fields.LoginField
+          render={({ value, handleChange, validation }) => (
             <>
               <TextInput
                 style={styles.textField}
                 value={value}
                 onChange={handleChange(extractNativeText)}
               />
-              {!valid && <Text>This field is required</Text>}
+              {!validation.valid && <Text>{validation.errors[0]}</Text>}
+            </>
+          )}
+        />
+        <Fields.PasswordField
+          render={({ value, handleChange, validation }) => (
+            <>
+              <TextInput
+                style={styles.textField}
+                value={value}
+                onChange={handleChange(extractNativeText)}
+              />
+              {!validation.valid && <Text>{validation.errors[0]}</Text>}
+            </>
+          )}
+        />
+        <Fields.PrivacyPolicyField
+          render={({ value, handleChange, validation }) => (
+            <>
+              <TextInput
+                style={styles.textField}
+                value={value}
+                onChange={handleChange(extractNativeText)}
+              />
+              {!validation.valid && <Text>{validation.errors[0]}</Text>}
             </>
           )}
         />
         <FormAction
-          render={(actions: FormStateActions | undefined) =>
+          render={(actions: FormStateActions) =>
             actions && <Button title={'Sign In'} onPress={actions.submit} />
           }
         />
-      </Form>
-      {/*<Memoized render={renderField} />*/}
-      {/*<SignInForm.Fields.PasswordField*/}
-      {/*  render={({ value, handleChange, valid }: FieldProps<string>) => (*/}
-      {/*    <>*/}
-      {/*      <TextInput*/}
-      {/*        value={value}*/}
-      {/*        onChange={handleChange(extractNativeText)}*/}
-      {/*      />*/}
-      {/*      {!valid && <Text>This field is required</Text>}*/}
-      {/*    </>*/}
-      {/*  )}*/}
-      {/*/>*/}
-      {/*<SignInForm.Fields.PrivacyPolicyField*/}
-      {/*  render={({ valid }: FieldProps<boolean>) => (*/}
-      {/*    <>{!valid && <Text>This field is required</Text>}</>*/}
-      {/*  )}*/}
-      {/*/>*/}
-      {/*<Button title="Sign In" onPress={signInForm} />*/}
+      </FormProvider>
     </View>
   );
 }

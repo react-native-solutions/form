@@ -1,4 +1,4 @@
-import { Validator } from './validators';
+import { Validator } from './validation/field';
 
 export interface ValidationConfig<T> {
   every?: Validator<T>[];

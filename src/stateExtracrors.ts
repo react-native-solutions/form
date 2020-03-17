@@ -1,4 +1,4 @@
-import { FieldState } from './Field';
+import { FieldState } from './createField';
 
 export type StateExtractor<T> = (event: any) => FieldState<T>;
 

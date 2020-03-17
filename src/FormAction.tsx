@@ -1,17 +1,22 @@
 import { ReactElement, useContext } from 'react';
-import { FormStateActions } from './useFormState';
 import FormContext from './formContext';
 
+export interface FormStateActions {
+  submit: () => void;
+}
+
 interface FormActionProps {
-  render: (
-    actions: FormStateActions | undefined
-  ) => ReactElement | null | false;
+  render: (actions: FormStateActions) => ReactElement;
 }
 
 const FormAction = ({ render }: FormActionProps) => {
   const { actions } = useContext(FormContext);
 
-  return render(actions);
+  const defaultAction: FormStateActions = {
+    submit: () => {},
+  };
+
+  return render(actions || defaultAction);
 };
 
 export default FormAction;

@@ -1,4 +1,4 @@
-import { FieldState } from '../Field';
+import { FieldState } from '../../createField';
 
 interface WithLength {
   length: number;
@@ -13,7 +13,8 @@ const minLength = (length: number) => ({
   value,
 }: FieldState<string | Array<any> | WithLength>) => value.length >= length;
 
-export default {
-  maxLength,
-  minLength,
-};
+const stringRequired = ({ value }: FieldState<string>) => value.length !== 0;
+
+const checkboxRequired = ({ value }: FieldState<boolean>) => value;
+
+export { maxLength, minLength, stringRequired, checkboxRequired };
