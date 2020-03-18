@@ -7,12 +7,12 @@ import {
   Button,
   NativeSyntheticEvent,
   TextInputChangeEventData,
+  Switch,
 } from 'react-native';
-import { FieldState } from '../../src/createField';
+import { FormProvider, FormAction, useForm, Validators } from 'form';
 import { FormConfig } from '../../src/config';
-import { FormProvider, useForm, Validators } from '../../src';
-import FormAction from '../../src/FormAction';
-import { FormStateActions } from '../../src/FormAction';
+import { FieldState } from 'src/createField';
+import { FormStateActions } from 'src/FormAction';
 
 const config: FormConfig = {
   validateOnChange: true,
@@ -21,8 +21,11 @@ const config: FormConfig = {
       initialValue: '',
       validate: {
         any: [
-          ['Login is bad :(', ({ value }) => value.includes('@')],
-          ['Login is bad :(', ({ value }) => value.includes('+380')],
+          'Login is bad :(',
+          [
+            ({ value }: FieldState<string>) => value.includes('@'),
+            ({ value }: FieldState<string>) => value.includes('+380'),
+          ],
         ],
       },
     },
@@ -37,6 +40,12 @@ const config: FormConfig = {
     },
     privacyPolicy: {
       initialValue: false,
+      validate: {
+        only: [
+          'This should be checked!',
+          ({ value }: FieldState<boolean>) => !!value,
+        ],
+      },
     },
   },
 };
@@ -78,13 +87,14 @@ function App() {
             </>
           )}
         />
+
         <Fields.PrivacyPolicyField
           render={({ value, handleChange, validation }) => (
             <>
-              <TextInput
-                style={styles.textField}
+              <Switch
+                onValueChange={handleChange}
                 value={value}
-                onChange={handleChange(extractNativeText)}
+                style={{ width: 20, height: 20 }}
               />
               {!validation.valid && <Text>{validation.errors[0]}</Text>}
             </>
@@ -117,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(App, () => true);
+export default App;

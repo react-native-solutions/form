@@ -1,7 +1,7 @@
 import { FieldState } from '../createField';
 import { FormConfig } from '../config';
 import { FieldsState, FormState } from '../useForm';
-import { validationMiddleware } from './field';
+import { createValidationMiddleware } from './field';
 
 export const allValid = (fields: FieldsState): boolean => {
   return Object.values(fields).reduce<boolean>(
@@ -19,7 +19,7 @@ export const validateForm = (
   const fields = Object.keys(state.fields).reduce(
     (validated, current) => ({
       ...validated,
-      [current]: validationMiddleware(config.fields[current].validate)(
+      [current]: createValidationMiddleware(config.fields[current].validate)(
         state.fields[current]
       ),
     }),

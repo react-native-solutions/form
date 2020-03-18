@@ -8,10 +8,7 @@
   "react-native": "src/index.ts",
   "files": [
     "src",
-    "lib",
-    "android",
-    "ios",
-    "form.podspec"
+    "lib"
   ],
   "scripts": {
     "test": "jest",
@@ -20,8 +17,7 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "pods": "cd example/ios && node -e \"process.exit(require('os').platform() === 'darwin')\" || pod install",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn"
   },
   "keywords": [
     "react-native",

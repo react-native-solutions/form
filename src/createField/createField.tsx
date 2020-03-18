@@ -1,9 +1,9 @@
 import React, {
+  memo,
   ReactElement,
   useCallback,
   useContext,
   useMemo,
-  memo,
 } from 'react';
 import FormContext from '../formContext';
 import { fromValue, StateExtractor } from '../stateExtracrors';
@@ -24,7 +24,7 @@ export interface FieldProps {
 }
 
 export const createField = (name: string, validateOnChange: boolean) => {
-  return ({ render }: FieldProps) => {
+  const Field = ({ render }: FieldProps) => {
     const { form } = useContext(FormContext);
     const fieldConfig = form?.config.fields[name];
 
@@ -50,7 +50,7 @@ export const createField = (name: string, validateOnChange: boolean) => {
       []
     );
 
-    const Memoized = useMemo(() => memo(render), []);
+    const Memoized = useMemo(() => memo(render), [form?.state.valid]);
 
     return (
       <Memoized
@@ -61,4 +61,6 @@ export const createField = (name: string, validateOnChange: boolean) => {
       />
     );
   };
+
+  return memo(Field);
 };

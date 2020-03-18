@@ -1,5 +1,9 @@
 import { FieldState } from '../createField';
-import { ValidationConfig } from '../config';
+import {
+  AnyValidationConfig,
+  OnlyValidationConfig,
+  ValidationConfig,
+} from '../config';
 import { identity } from '../utils';
 import { FormMiddleware } from '../middleware';
 
@@ -12,7 +16,9 @@ export type ValidatorFunc<T> = (state: FieldState<T>) => boolean;
 
 export type ErrorMessageCreator<T> = (value: T) => string;
 
-export type Validator<T> = [string | ErrorMessageCreator<T>, ValidatorFunc<T>];
+export type Validator<T> =
+  | [string | ErrorMessageCreator<T>, ValidatorFunc<T>]
+  | ValidatorFunc<T>;
 
 export const updateValidationState = (
   state: FieldState<any>,
@@ -50,6 +56,10 @@ const validateField = (
     return { valid: true };
   }
 
+  if (typeof validator === 'function') {
+    return { valid: validator(state) };
+  }
+
   const [errorOrCreator, validatorFunc] = validator;
 
   const result = validatorFunc(state);
@@ -66,7 +76,7 @@ const validateField = (
   return { error, valid: result };
 };
 
-const validateOnly = (onlyConfig: Validator<any>) => (
+const validateOnly = (onlyConfig: OnlyValidationConfig<any>) => (
   state: FieldState<any>
 ) => {
   const { valid, error } = validateField(onlyConfig, state);
@@ -91,11 +101,16 @@ const validateEvery = (everyConfig: Validator<any>[]) => {
   };
 };
 
-const validateAny = (anyConfig: Validator<any>[]) => {
+const validateAny = (anyConfig: AnyValidationConfig<any>) => {
+  const [errorOrCreator, validators] = anyConfig;
+
   return (state: FieldState<any>) => {
     let updated = { ...state };
-    for (let index = 0; index < anyConfig.length; index++) {
-      const { valid, error } = validateField(anyConfig[index], updated);
+    for (let index = 0; index < validators.length; index++) {
+      const { valid, error } = validateField(
+        [errorOrCreator, validators[index]],
+        updated
+      );
       updated = updateValidationState(updated, valid, error);
 
       if (valid) {

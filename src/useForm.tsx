@@ -98,7 +98,7 @@ const useForm = (config: FormConfig): Form => {
   }, []);
 
   const validate = useCallback(() => {
-    dispatch({ type: FormActionTypes.VALIDATE, payload: config.fields });
+    dispatch({ type: FormActionTypes.VALIDATE, payload: config });
   }, []);
 
   const Fields = useMemo(
