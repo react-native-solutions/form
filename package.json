@@ -1,7 +1,7 @@
 {
-  "name": "form",
-  "version": "0.1.0",
-  "description": "Form",
+  "name": "@react-native-solutions/form",
+  "version": "0.2.0",
+  "description": "Form state management",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",

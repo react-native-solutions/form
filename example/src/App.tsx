@@ -9,10 +9,10 @@ import {
   TextInputChangeEventData,
   Switch,
 } from 'react-native';
-import { FormProvider, FormAction, useForm, Validators } from 'form';
 import { FormConfig } from '../../src/config';
 import { FieldState } from 'src/createField';
 import { FormStateActions } from 'src/FormAction';
+import { FormProvider, FormAction, useForm, Validators } from 'form';
 
 const config: FormConfig = {
   validateOnChange: true,
