@@ -30,7 +30,7 @@ export interface FieldProps {
 }
 
 export const createField = (name: string, validateOnChange: boolean) => {
-  const Field = ({ render }: FieldProps) => {
+  const Field = ({ render, ...props }: FieldProps) => {
     const { form } = useContext(FormContext);
     const fieldConfig = form?.config.fields[name];
 
@@ -60,6 +60,7 @@ export const createField = (name: string, validateOnChange: boolean) => {
 
     return (
       <Memoized
+        {...props}
         {...{
           ...form?.state.fields[name],
           handleChange,
