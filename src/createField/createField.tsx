@@ -23,11 +23,13 @@ export interface InputProps<T> extends FieldState<T> {
   handleChange: (extractorOrEvent: StateExtractor<T> | any) => void;
 }
 
-export interface FieldProps {
+export type FieldProps = {
   render: (
     props: any
   ) => ReactElement | ReactElement<(props: any) => ReactElement>;
-}
+} & {
+  [propsToPassKey: string]: any;
+};
 
 export const createField = (name: string, validateOnChange: boolean) => {
   const Field = ({ render, ...props }: FieldProps) => {
