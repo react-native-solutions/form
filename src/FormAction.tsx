@@ -9,6 +9,8 @@ interface FormActionProps {
   render: (actions: FormStateActions) => ReactElement;
 }
 
+export interface ActionRenderProps extends FormStateActions {}
+
 const FormAction = ({ render }: FormActionProps) => {
   const { actions } = useContext(FormContext);
 

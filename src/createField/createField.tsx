@@ -19,6 +19,10 @@ export interface FieldState<T> {
   validation?: FieldValidationState;
 }
 
+export interface InputProps<T> extends FieldState<T> {
+  handleChange: (extractorOrEvent: StateExtractor<T> | any) => void;
+}
+
 export interface FieldProps {
   render: (props: any) => ReactElement;
 }
