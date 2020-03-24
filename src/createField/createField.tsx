@@ -24,7 +24,9 @@ export interface InputProps<T> extends FieldState<T> {
 }
 
 export interface FieldProps {
-  render: (props: any) => ReactElement;
+  render: (
+    props: any
+  ) => ReactElement | ReactElement<(props: any) => ReactElement>;
 }
 
 export const createField = (name: string, validateOnChange: boolean) => {

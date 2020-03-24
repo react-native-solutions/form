@@ -6,7 +6,9 @@ export interface FormStateActions {
 }
 
 interface FormActionProps {
-  render: (actions: FormStateActions) => ReactElement;
+  render: (
+    actions: FormStateActions
+  ) => ReactElement | ReactElement<(actions: FormStateActions) => ReactElement>;
 }
 
 export interface ActionRenderProps extends FormStateActions {}
