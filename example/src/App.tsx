@@ -94,7 +94,7 @@ function App() {
               <Switch
                 onValueChange={handleChange}
                 value={value}
-                style={{ width: 20, height: 20 }}
+                style={styles.switch}
               />
               {!validation.valid && <Text>{validation.errors[0]}</Text>}
             </>
@@ -124,6 +124,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 4,
     backgroundColor: '#ffa062',
+  },
+  switch: {
+    width: 20,
+    height: 20,
   },
 });
 
