@@ -1,6 +1,6 @@
 {
   "name": "@react-native-solutions/form",
-  "version": "0.3.22",
+  "version": "0.3.23",
   "description": "Form state management",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
