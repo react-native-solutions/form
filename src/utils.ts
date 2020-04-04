@@ -14,7 +14,7 @@ export const compose = (...functions: Function[]) => {
   return functions.reduce((a, b) => (...args: any[]) => a(b(...args)));
 };
 
-export const pipe = (...functions: AnyFunction[]) => {
+export const pipe = <T = any>(...functions: ((arg: T) => T)[]) => {
   if (!functions.length) {
     return identity;
   }
@@ -23,5 +23,5 @@ export const pipe = (...functions: AnyFunction[]) => {
     return functions[0];
   }
 
-  return functions.reduce((a, b) => (...args: any[]) => b(a(...args)));
+  return functions.reduce((a, b) => (arg: T) => b(a(arg)));
 };

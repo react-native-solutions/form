@@ -27,7 +27,10 @@ export interface FieldsConfig {
   [name: string]: FieldConfig<any>;
 }
 
+export type ValidateOnChangeConfig = 'always' | 'invalid' | 'none';
+
 export interface FormConfig {
-  validateOnChange: boolean;
+  validateOnChange: ValidateOnChangeConfig;
+  validateOnInit?: boolean;
   fields: FieldsConfig;
 }

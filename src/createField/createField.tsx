@@ -1,10 +1,4 @@
-import React, {
-  memo,
-  ReactElement,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
+import React, { memo, ReactElement, useCallback, useContext } from 'react';
 import FormContext from '../formContext';
 import { fromValue, StateExtractor } from '../stateExtracrors';
 import {
@@ -13,6 +7,8 @@ import {
 } from '../validation/field';
 import { pipe } from '../utils';
 import { FormMiddleware } from '../middleware';
+import { useMemoOne } from 'use-memo-one';
+import { ValidateOnChangeConfig } from '../config';
 
 export interface FieldState<T> {
   readonly value: T;
@@ -21,6 +17,7 @@ export interface FieldState<T> {
 
 export interface InputProps<T> extends FieldState<T> {
   handleChange: (extractorOrEvent: StateExtractor<T> | any) => void;
+  validate: () => void;
 }
 
 export type FieldProps = {
@@ -31,7 +28,10 @@ export type FieldProps = {
   [propsToPassKey: string]: any;
 };
 
-export const createField = (name: string, validateOnChange: boolean) => {
+export const createField = (
+  name: string,
+  validateOnChange: ValidateOnChangeConfig
+) => {
   const Field = ({ render, ...props }: FieldProps) => {
     const { form } = useContext(FormContext);
     const fieldConfig = form?.config.fields[name];
@@ -39,9 +39,13 @@ export const createField = (name: string, validateOnChange: boolean) => {
     const handleChange = useCallback(
       (extractorOrEvent: StateExtractor<any> | any) => {
         const middleware: FormMiddleware[] = [];
+        const validationMiddleware = createValidationMiddleware(
+          fieldConfig?.validate,
+          form?.config.validateOnChange || 'none'
+        );
 
-        if (validateOnChange) {
-          middleware.push(createValidationMiddleware(fieldConfig?.validate));
+        if (validateOnChange !== 'none') {
+          middleware.push(validationMiddleware);
         }
 
         if (typeof extractorOrEvent !== 'function') {
@@ -58,7 +62,17 @@ export const createField = (name: string, validateOnChange: boolean) => {
       []
     );
 
-    const Memoized = useMemo(() => memo(render), [form?.state.valid]);
+    const validate = () => {
+      form?.changeField(
+        name,
+        createValidationMiddleware(
+          fieldConfig?.validate,
+          'always'
+        )(form?.state.fields[name])
+      );
+    };
+
+    const Memoized = useMemoOne(() => memo(render), []);
 
     return (
       <Memoized
@@ -66,6 +80,7 @@ export const createField = (name: string, validateOnChange: boolean) => {
         {...{
           ...form?.state.fields[name],
           handleChange,
+          validate,
         }}
       />
     );

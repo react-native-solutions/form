@@ -9,13 +9,19 @@ import {
   TextInputChangeEventData,
   Switch,
 } from 'react-native';
-import { FormConfig } from '../../src/config';
 import { FieldState } from 'src/createField';
 import { FormStateActions } from 'src/FormAction';
-import { FormProvider, FormAction, useForm, Validators } from 'form';
+import {
+  FormProvider,
+  FormAction,
+  useForm,
+  Validators,
+  FormConfig,
+} from '../../src/index';
 
 const config: FormConfig = {
-  validateOnChange: true,
+  validateOnChange: 'invalid',
+  validateOnInit: false,
   fields: {
     login: {
       initialValue: '',
@@ -33,7 +39,7 @@ const config: FormConfig = {
       initialValue: '',
       validate: {
         every: [
-          ['Password is too short', Validators.minLength(4)],
+          ['asdasd', Validators.email],
           ['Password is too long', Validators.maxLength(8)],
         ],
       },

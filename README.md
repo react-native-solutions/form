@@ -14,7 +14,8 @@ npm install @react-native-solutions/form
 import { FormProvider, FormAction, useForm, Validators } from '@react-native-solutions/form';
 
 const config = {
-  validateOnChange: true,
+  validateOnChange: 'invalid', // 'always' | 'invalid' | 'none'
+  validateOnInit: false,
   fields: {
     login: {
       initialValue: '',

@@ -2,13 +2,14 @@ import { FieldState } from '../createField';
 import {
   AnyValidationConfig,
   OnlyValidationConfig,
+  ValidateOnChangeConfig,
   ValidationConfig,
 } from '../config';
 import { identity } from '../utils';
 import { FormMiddleware } from '../middleware';
 
 export interface FieldValidationState {
-  valid: boolean;
+  valid?: boolean;
   errors?: string[];
 }
 
@@ -76,17 +77,30 @@ const validateField = (
   return { error, valid: result };
 };
 
-const validateOnly = (onlyConfig: OnlyValidationConfig<any>) => (
-  state: FieldState<any>
-) => {
+const validateOnly = (
+  onlyConfig: OnlyValidationConfig<any>,
+  validationStrategy: ValidateOnChangeConfig
+) => (state: FieldState<any>) => {
   const { valid, error } = validateField(onlyConfig, state);
+
+  if (
+    validationStrategy === 'invalid' &&
+    state.validation?.valid !== false &&
+    !valid
+  ) {
+    return { ...state };
+  }
 
   return updateValidationState(state, valid, error);
 };
 
-const validateEvery = (everyConfig: Validator<any>[]) => {
+const validateEvery = (
+  everyConfig: Validator<any>[],
+  validationStrategy: ValidateOnChangeConfig
+) => {
   return (state: FieldState<any>) => {
     let updated = { ...state };
+
     for (const config of everyConfig) {
       const { valid, error } = validateField(config, updated);
 
@@ -97,20 +111,33 @@ const validateEvery = (everyConfig: Validator<any>[]) => {
       );
     }
 
+    if (
+      validationStrategy === 'invalid' &&
+      state.validation?.valid !== false &&
+      updated.validation?.valid === false
+    ) {
+      return { ...state };
+    }
+
     return updated;
   };
 };
 
-const validateAny = (anyConfig: AnyValidationConfig<any>) => {
+const validateAny = (
+  anyConfig: AnyValidationConfig<any>,
+  validationStrategy: ValidateOnChangeConfig
+) => {
   const [errorOrCreator, validators] = anyConfig;
 
   return (state: FieldState<any>) => {
     let updated = { ...state };
+
     for (let index = 0; index < validators.length; index++) {
       const { valid, error } = validateField(
         [errorOrCreator, validators[index]],
         updated
       );
+
       updated = updateValidationState(updated, valid, error);
 
       if (valid) {
@@ -118,24 +145,44 @@ const validateAny = (anyConfig: AnyValidationConfig<any>) => {
       }
     }
 
+    if (
+      validationStrategy === 'invalid' &&
+      state.validation?.valid !== false &&
+      updated.validation?.valid === false
+    ) {
+      return { ...state };
+    }
+
     return updated;
   };
 };
 
 export const createValidationMiddleware = (
-  validationConfig: ValidationConfig<any> | undefined
+  validationConfig: ValidationConfig<any> | undefined,
+  validationStrategy: ValidateOnChangeConfig
 ): FormMiddleware => {
   if (validationConfig?.only) {
-    return validateOnly(validationConfig.only);
+    return validateOnly(validationConfig.only, validationStrategy);
   }
 
   if (validationConfig?.every) {
-    return validateEvery(validationConfig.every);
+    return validateEvery(validationConfig.every, validationStrategy);
   }
 
   if (validationConfig?.any) {
-    return validateAny(validationConfig.any);
+    return validateAny(validationConfig.any, validationStrategy);
   }
 
   return identity;
 };
+
+export const clearValidationErrors = (
+  state: FieldState<any>
+): FieldState<any> => ({
+  ...state,
+  validation: {
+    ...state.validation,
+    valid: state.validation?.valid,
+    errors: [],
+  },
+});

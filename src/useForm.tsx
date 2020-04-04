@@ -1,8 +1,15 @@
-import { Reducer, useReducer, useCallback, useMemo, ReactElement } from 'react';
+import {
+  Reducer,
+  useReducer,
+  useCallback,
+  ReactElement,
+  useEffect,
+} from 'react';
 import { FieldsConfig, FormConfig } from './config';
 import { createField, FieldProps, FieldState } from './createField';
 import { toUpperCamelCase } from './camelCase';
 import { validateForm, allValid } from './validation/form';
+import { useMemoOne } from 'use-memo-one';
 
 export interface FieldsState {
   [name: string]: FieldState<any>;
@@ -58,16 +65,18 @@ const formReducer = (state: FormState, action: FormAction): FormState => {
 
   switch (type) {
     case FormActionTypes.CHANGE_FIELD:
+      const updated = {
+        ...state.fields,
+        [meta.fieldName]: {
+          ...state.fields[meta.fieldName],
+          ...payload,
+        },
+      };
+
       return {
         ...state,
-        valid: allValid(state.fields),
-        fields: {
-          ...state.fields,
-          [meta.fieldName]: {
-            ...state.fields[meta.fieldName],
-            ...payload,
-          },
-        },
+        valid: allValid(updated),
+        fields: updated,
       };
     case FormActionTypes.RESET:
       return initFormState(payload);
@@ -81,6 +90,12 @@ const useForm = (config: FormConfig): Form => {
     formReducer,
     initFormState(config.fields)
   );
+
+  useEffect(() => {
+    if (config.validateOnInit) {
+      dispatch({ type: FormActionTypes.VALIDATE, payload: config });
+    }
+  }, []);
 
   const changeField = useCallback(
     (fieldName: string, state: FieldState<any>) => {
@@ -101,7 +116,7 @@ const useForm = (config: FormConfig): Form => {
     dispatch({ type: FormActionTypes.VALIDATE, payload: config });
   }, []);
 
-  const Fields = useMemo(
+  const Fields = useMemoOne(
     () =>
       Object.keys(config.fields).reduce(
         (fields, fieldName: string) => ({

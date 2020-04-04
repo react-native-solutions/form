@@ -18,8 +18,6 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - form (0.1.0):
-    - React
   - glog (0.3.5)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
@@ -226,7 +224,6 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
-  - form (from `../..`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -265,8 +262,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/FBReactNativeSpec"
   Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
-  form:
-    :path: "../.."
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCTRequired:
@@ -316,7 +311,6 @@ SPEC CHECKSUMS:
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
-  form: 30b24b4045c53c07756e1d477f8cf915dc4fcea8
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
@@ -339,6 +333,6 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: a00a6da2decebfc7d852c3281bb7a0d1f7f18528
+PODFILE CHECKSUM: 414fd7149f1216d673e23f7b9435d7169800faa2
 
 COCOAPODS: 1.8.4

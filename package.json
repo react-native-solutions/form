@@ -1,6 +1,6 @@
 {
   "name": "@react-native-solutions/form",
-  "version": "0.3.4",
+  "version": "0.3.22",
   "description": "Form state management",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -123,6 +123,6 @@
     ]
   },
   "dependencies": {
-
+    "use-memo-one": "^1.1.1"
   }
 }

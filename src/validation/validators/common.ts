@@ -17,6 +17,7 @@ const stringRequired = ({ value }: FieldState<string>) => value.length !== 0;
 
 const checkboxRequired = ({ value }: FieldState<boolean>) => value;
 
-const email = ({ value }: FieldState<string>) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+const email = ({ value }: FieldState<string>) =>
+  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
 
 export { maxLength, minLength, stringRequired, checkboxRequired, email };
