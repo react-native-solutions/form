@@ -25,32 +25,36 @@ const config: FormConfig = {
   fields: {
     login: {
       initialValue: '',
-      validate: {
-        any: [
-          'Login is bad :(',
-          [
-            ({ value }: FieldState<string>) => value.includes('@'),
-            ({ value }: FieldState<string>) => value.includes('+380'),
-          ],
-        ],
+      validate: ({ value }, done, error) => {
+        if (!value.includes('@') || !value.includes('+380')) {
+          return error('Login is bad :(');
+        }
+
+        return done();
       },
     },
     password: {
       initialValue: '',
-      validate: {
-        every: [
-          ['asdasd', Validators.email],
-          ['Password is too long', Validators.maxLength(8)],
-        ],
+      validate: (state, done, error) => {
+        if (!Validators.email(state)) {
+          return error('asdasd');
+        }
+
+        if (!Validators.maxLength(8)(state)) {
+          return error('Password is too long');
+        }
+
+        return done();
       },
     },
     privacyPolicy: {
       initialValue: false,
-      validate: {
-        only: [
-          'This should be checked!',
-          ({ value }: FieldState<boolean>) => !!value,
-        ],
+      validate: ({ value }, done, error) => {
+        if (!value) {
+          return error('This field is required');
+        }
+
+        return done();
       },
     },
   },

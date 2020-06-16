@@ -16,15 +16,26 @@ export const validateForm = (
   state: FormState,
   config: FormConfig
 ): FormState => {
-  const fields = Object.keys(state.fields).reduce(
-    (validated, current) => ({
-      ...validated,
-      [current]: createValidationMiddleware(
-        config.fields[current].validate,
-        'always'
-      )(state.fields[current]),
-    }),
-    {}
+  const fields: FieldsState = Object.keys(state.fields).reduce<FieldsState>(
+    (validated, current) => {
+      const validator = config.fields[current].validate;
+
+      if (!validator) {
+        return {
+          ...validated,
+          [current]: fields[current],
+        };
+      }
+
+      return {
+        ...validated,
+        [current]: createValidationMiddleware(
+          validator,
+          'always'
+        )(state.fields[current]),
+      };
+    },
+    {} as FieldsState
   );
 
   return {

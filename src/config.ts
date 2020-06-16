@@ -1,26 +1,8 @@
-import {
-  ErrorMessageCreator,
-  Validator,
-  ValidatorFunc,
-} from './validation/field';
-
-export type EveryValidationConfig<T> = Validator<T>[];
-
-export type AnyValidationConfig<T> = [
-  string | ErrorMessageCreator<T>,
-  ValidatorFunc<T>[]
-];
-export type OnlyValidationConfig<T> = Validator<T>;
-
-export interface ValidationConfig<T> {
-  every?: EveryValidationConfig<T>;
-  any?: AnyValidationConfig<T>;
-  only?: OnlyValidationConfig<T>;
-}
+import { ValidatorFunc } from './validation/field';
 
 export interface FieldConfig<T> {
   initialValue: T;
-  validate?: ValidationConfig<T>;
+  validate?: ValidatorFunc<T>;
 }
 
 export interface FieldsConfig {

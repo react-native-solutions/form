@@ -39,13 +39,14 @@ export const createField = (
     const handleChange = useCallback(
       (extractorOrEvent: StateExtractor<any> | any) => {
         const middleware: FormMiddleware[] = [];
-        const validationMiddleware = createValidationMiddleware(
-          fieldConfig?.validate,
-          form?.config.validateOnChange || 'none'
-        );
 
-        if (validateOnChange !== 'none') {
-          middleware.push(validationMiddleware);
+        if (validateOnChange !== 'none' && fieldConfig?.validate) {
+          middleware.push(
+            createValidationMiddleware(
+              fieldConfig?.validate,
+              form?.config.validateOnChange || 'none'
+            )
+          );
         }
 
         if (typeof extractorOrEvent !== 'function') {
@@ -63,6 +64,10 @@ export const createField = (
     );
 
     const validate = () => {
+      if (!fieldConfig?.validate) {
+        return;
+      }
+
       form?.changeField(
         name,
         createValidationMiddleware(
