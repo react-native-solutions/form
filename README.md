@@ -6,6 +6,8 @@ Form
 
 ```sh
 npm install @react-native-solutions/form
+
+yarn add @react-native-solutions/form
 ```
 
 ## Usage
@@ -14,37 +16,41 @@ npm install @react-native-solutions/form
 import { FormProvider, FormAction, useForm, Validators } from '@react-native-solutions/form';
 
 const config = {
-  validateOnChange: 'invalid', // 'always' | 'invalid' | 'none'
+  validateOnChange: 'invalid',
   validateOnInit: false,
   fields: {
     login: {
       initialValue: '',
-      validate: {
-        any: [
-          'Login is bad :(',
-          [
-            ({ value }) => value.includes('@'),
-            ({ value }) => value.includes('+380'),
-          ],
-        ],
+      validate: ({ value }, done, error) => {
+        if (!value.includes('@') || !value.includes('+380')) {
+          return error('Login is bad :(');
+        }
+
+        return done();
       },
     },
     password: {
       initialValue: '',
-      validate: {
-        every: [
-          ['Password is too short', Validators.minLength(4)],
-          ['Password is too long', Validators.maxLength(8)],
-        ],
+      validate: (state, done, error) => {
+        if (!Validators.email(state)) {
+          return error('Some error');
+        }
+
+        if (!Validators.maxLength(8)(state)) {
+          return error('Password is too long');
+        }
+
+        return done();
       },
     },
     privacyPolicy: {
       initialValue: false,
-      validate: {
-        only: [
-          'This should be checked!',
-          ({ value }) => !!value,
-        ],
+      validate: ({ value }, done, error) => {
+        if (!value) {
+          return error('This field is required');
+        }
+
+        return done();
       },
     },
   },
@@ -136,7 +142,7 @@ Takes the only one `render` prop which is a function.
 
 ```jsx
 const MyInput = ({ value, handleChange, validation }) => {
-    ...
+    // ...
     return <SomeJSX />
 }
 
@@ -174,12 +180,12 @@ If you haven't passed a `StateExtractor` to the `handleChange` it will treat upc
 
 // Similar to
 
-<TextInput onTextChange={handleChange(text => ({ value: text )})} />
+<TextInput onTextChange={handleChange(text => ({ value: text }))} />
 ```
 
 ## `FormAction` API
 
-A from action component.
+Form action component.
 
 ```jsx
 <FormProvider form={EntireFormState} onSubmit={handleSubmit}>

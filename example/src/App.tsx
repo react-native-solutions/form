@@ -101,11 +101,7 @@ function App() {
         <Fields.PrivacyPolicyField
           render={({ value, handleChange, validation }) => (
             <>
-              <Switch
-                onValueChange={handleChange}
-                value={value}
-                style={{ width: 20, height: 20 }}
-              />
+              <Switch onValueChange={handleChange} value={value} />
               {!validation.valid && <Text>{validation.errors[0]}</Text>}
             </>
           )}
