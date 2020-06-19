@@ -36,15 +36,16 @@ export const createValidationMiddleware = (
 
   if (validationStrategy === 'invalid') {
     return (state: FieldState<any>) => {
-      const shouldValidate = state.validation?.valid === false;
+      const validation = validator(state, done, error);
+      const shouldValidate = !state.validation?.valid;
 
       if (!shouldValidate) {
-        return state;
+        return { ...state };
       }
 
       return {
         ...state,
-        validation: validator(state, done, error),
+        validation,
       };
     };
   }
