@@ -18,7 +18,7 @@ export const validateForm = (
 ): FormState => {
   const fields: FieldsState = Object.keys(state.fields).reduce<FieldsState>(
     (validated, current) => {
-      const validator = config.fields[current].validate;
+      const validator = config.fields?.[current]?.validate;
 
       if (!validator) {
         return {
