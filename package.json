@@ -1,6 +1,6 @@
 {
   "name": "@react-native-solutions/form",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Form state management",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -19,6 +19,13 @@
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn"
   },
+  "tags": [
+    "react",
+    "react-native",
+    "forms",
+    "ios",
+    "android"
+  ],
   "keywords": [
     "react-native",
     "ios",
