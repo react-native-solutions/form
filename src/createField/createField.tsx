@@ -1,4 +1,10 @@
-import React, { memo, ReactElement, useCallback, useContext } from 'react';
+import React, {
+  memo,
+  NamedExoticComponent,
+  ReactElement,
+  useCallback,
+  useContext,
+} from 'react';
 import FormContext from '../formContext';
 import { fromValue, StateExtractor } from '../stateExtracrors';
 import {
@@ -23,7 +29,10 @@ export interface InputProps<T> extends FieldState<T> {
 export type FieldProps = {
   render: (
     props: any
-  ) => ReactElement | ReactElement<(props: any) => ReactElement>;
+  ) =>
+    | ReactElement
+    | ReactElement<(props: any) => ReactElement>
+    | NamedExoticComponent<any>;
 } & {
   [propsToPassKey: string]: any;
 };
@@ -77,7 +86,7 @@ export const createField = (
       );
     };
 
-    const Memoized = useMemoOne(() => memo(render), []);
+    const Memoized = useMemoOne(() => memo(render as any), []);
 
     return (
       <Memoized

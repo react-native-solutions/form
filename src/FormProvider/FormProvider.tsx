@@ -1,6 +1,6 @@
 import * as React from 'react';
 import FormContext from '../formContext';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { FormMutableState, FormState } from '../useForm';
 import { validateForm } from '../validation/form';
 
@@ -11,10 +11,10 @@ interface FormProviderProps {
 }
 
 const FormProvider = ({ children, onSubmit, form }: FormProviderProps) => {
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     form.validate();
     onSubmit(validateForm(form.state, form.config));
-  };
+  }, [form, form.state, form.validate, onSubmit]);
 
   const context = {
     form,

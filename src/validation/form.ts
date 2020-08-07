@@ -23,7 +23,7 @@ export const validateForm = (
       if (!validator) {
         return {
           ...validated,
-          [current]: fields[current],
+          [current]: state.fields[current],
         };
       }
 
